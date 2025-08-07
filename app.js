@@ -14,7 +14,7 @@ import {
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB1C81GDT364Mz1kSpl0DvB_8ITV9T1yvI",
   authDomain: "dashboard-6ee05.firebaseapp.com",
@@ -25,11 +25,13 @@ const firebaseConfig = {
   measurementId: "G-7RC2MD316L"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
+// ====================== AUTHENTICATION ======================
+// Check auth state
 onAuthStateChanged(auth, (user) => {
   const currentPage = window.location.pathname.split('/').pop();
 
@@ -50,7 +52,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
+// ====================== SIGN UP FUNCTIONALITY ======================
 const signUpBtn = document.querySelector('#Sbtn');
 if (signUpBtn) {
   signUpBtn.addEventListener('click', () => {
@@ -93,7 +95,7 @@ if (signUpBtn) {
   });
 }
 
-
+// ====================== LOGIN FUNCTIONALITY ======================
 const loginBtn = document.querySelector('#Lbtn');
 if (loginBtn) {
   loginBtn.addEventListener('click', () => {
@@ -133,7 +135,7 @@ if (loginBtn) {
   });
 }
 
-
+// ====================== LOGOUT FUNCTIONALITY ======================
 const logoutBtn = document.querySelector('#logoutBtn');
 if (logoutBtn) {
   logoutBtn.addEventListener('click', () => {
@@ -168,59 +170,87 @@ if (logoutBtn) {
   });
 }
 
-let addBtn = document.getElementById('addBtn');
+// ====================== ITEMS MANAGEMENT ======================
+// Function to read and display items
+const readData = async () => {
+  const getItems = document.getElementById('Items');
+  if (getItems) {
+    getItems.innerHTML = "";
+    const querySnapshot = await getDocs(collection(db, "Items"));
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      getItems.innerHTML += `
+        <div class="card" style="width: 18rem;">
+          <img src="${data.iImageURL}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Name: ${data.iname}</h5>
+            <p class="card-text">Price: ${data.iprice}</p>
+            <p class="card-text">Description: ${data.idescription}</p>
+            <button class="btn btn-info m-4">Edit</button>
+            <button class="btn btn-danger m-4">Delete</button>
+          </div>
+        </div>`;
+    });
+  }
+};
 
+// Add item functionality
+const addBtn = document.getElementById('addBtn');
 if (addBtn) {
   addBtn.addEventListener('click', async () => {
-    let iname = document.getElementById('iname').value.trim();
-    let iprice = document.getElementById('iprice').value.trim();
-    let idescription = document.getElementById('idescription').value.trim();
-    let iImageURL = document.getElementById('iImageURL').value.trim();
+    const iname = document.getElementById('iname').value.trim();
+    const iprice = document.getElementById('iprice').value.trim();
+    const idescription = document.getElementById('idescription').value.trim();
+    const iImageURL = document.getElementById('iImageURL').value.trim();
+
+    if (!iname || !iprice || !idescription || !iImageURL) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill in all fields!',
+      });
+      return;
+    }
 
     try {
-      const docRef = await addDoc(collection(db, "Items"), {
+      await addDoc(collection(db, "Items"), {
         iname,
         iprice,
         idescription,
         iImageURL,
         Time: Timestamp.now()
       });
-      console.log("Document written with ID: ", docRef.id);
       
+      // Clear form fields
       document.getElementById('iname').value = '';
       document.getElementById('iprice').value = '';
       document.getElementById('idescription').value = '';
       document.getElementById('iImageURL').value = '';
       
+      // Close modal
       bootstrap.Modal.getInstance(document.getElementById('exampleModal')).hide();
       
+      // Refresh items list
+      readData();
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Item Added!',
+        showConfirmButton: false,
+        timer: 1500
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to add item',
+      });
     }
   });
 }
 
-
-let getItems = document.getElementById('Items');
-
-if (getItems) {
-  let readData = async () => {
-    getItems.innerHTML = "";
-    const querySnapshot = await getDocs(collection(db, "Items"));
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      getItems.innerHTML += `<div class="card" style="width: 18rem;">
-        <img src="${data.iImageURL}" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Name : ${data.iname}</h5>
-          <p class="card-text"> Price : ${data.iprice}</p>
-          <p class="card-text">Description : ${data.idescription}</p>
-          <button class="btn btn-info m-4">Edited</button>
-          <button class="btn btn-danger m-4">Delete</button>
-        </div>
-      </div>`;
-    });
-  }
+// Initial data load when Dashboard loads
+if (window.location.pathname.split('/').pop() === 'Dashboard.html') {
   readData();
-};
- 
+}
