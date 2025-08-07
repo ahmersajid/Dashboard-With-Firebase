@@ -1,0 +1,141 @@
+/* Sign-up.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    color: #fff;
+    transition: all 0.5s ease;
+}
+
+.container {
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    animation: fadeIn 0.8s ease-out;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+    color: #e94560;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(233, 69, 96, 0.75), rgba(255, 255, 255, 0));
+    margin: 1.5rem 0;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+input:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.5);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 25px;
+    background-color: #e94560;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+button:hover {
+    background-color: #ff6b81;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.footer {
+    margin-top: 2rem;
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+.footer a {
+    color: #e94560;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+    color: #ff6b81;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 85%;
+        padding: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 1.2rem;
+    }
+    
+    input, button {
+        padding: 10px 12px;
+    }
+}
