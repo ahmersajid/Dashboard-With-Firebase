@@ -30,16 +30,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ====================== AUTHENTICATION ======================
-// Check auth state
 onAuthStateChanged(auth, (user) => {
   const currentPage = window.location.pathname.split('/').pop();
 
   if (user) {
     console.log("User logged in:", user.email);
 
-    if (currentPage === 'Log-in.html' || currentPage === 'Sign-up.html') {
-      if (currentPage === 'Log-in.html') {
+    if (currentPage === 'index.html' || currentPage === 'Sign-up.html') {
+      if (currentPage === 'index.html') {
         window.location.href = 'Dashboard.html';
       }
     }
@@ -47,12 +45,11 @@ onAuthStateChanged(auth, (user) => {
     console.log("User logged out");
 
     if (currentPage === 'Dashboard.html') {
-      window.location.href = 'Log-in.html';
+      window.location.href = 'index.html';
     }
   }
 });
 
-// ====================== SIGN UP FUNCTIONALITY ======================
 const signUpBtn = document.querySelector('#Sbtn');
 if (signUpBtn) {
   signUpBtn.addEventListener('click', () => {
@@ -82,7 +79,7 @@ if (signUpBtn) {
           showConfirmButton: false,
           timer: 2000
         }).then(() => {
-          window.location.href = 'Log-in.html';
+          window.location.href = 'index.html';
         });
       })
       .catch((error) => {
@@ -95,7 +92,6 @@ if (signUpBtn) {
   });
 }
 
-// ====================== LOGIN FUNCTIONALITY ======================
 const loginBtn = document.querySelector('#Lbtn');
 if (loginBtn) {
   loginBtn.addEventListener('click', () => {
@@ -135,7 +131,6 @@ if (loginBtn) {
   });
 }
 
-// ====================== LOGOUT FUNCTIONALITY ======================
 const logoutBtn = document.querySelector('#logoutBtn');
 if (logoutBtn) {
   logoutBtn.addEventListener('click', () => {
@@ -156,7 +151,7 @@ if (logoutBtn) {
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
-            window.location.href = 'Log-in.html';
+            window.location.href = 'index.html';
           });
         }).catch((error) => {
           Swal.fire({
@@ -170,8 +165,7 @@ if (logoutBtn) {
   });
 }
 
-// ====================== ITEMS MANAGEMENT ======================
-// Function to read and display items
+
 const readData = async () => {
   const getItems = document.getElementById('Items');
   if (getItems) {
@@ -186,15 +180,14 @@ const readData = async () => {
             <h5 class="card-title">Name: ${data.iname}</h5>
             <p class="card-text">Price: ${data.iprice}</p>
             <p class="card-text">Description: ${data.idescription}</p>
-            <button class="btn btn-info m-4">Edit</button>
-            <button class="btn btn-danger m-4">Delete</button>
+            <button id='Edit' class="btn btn-info">Edit</button>
+            <button id='Delete' class="btn btn-danger">Delete</button>
           </div>
         </div>`;
     });
   }
 };
 
-// Add item functionality
 const addBtn = document.getElementById('addBtn');
 if (addBtn) {
   addBtn.addEventListener('click', async () => {
@@ -221,16 +214,13 @@ if (addBtn) {
         Time: Timestamp.now()
       });
       
-      // Clear form fields
       document.getElementById('iname').value = '';
       document.getElementById('iprice').value = '';
       document.getElementById('idescription').value = '';
       document.getElementById('iImageURL').value = '';
       
-      // Close modal
       bootstrap.Modal.getInstance(document.getElementById('exampleModal')).hide();
       
-      // Refresh items list
       readData();
       
       Swal.fire({
@@ -250,7 +240,6 @@ if (addBtn) {
   });
 }
 
-// Initial data load when Dashboard loads
 if (window.location.pathname.split('/').pop() === 'Dashboard.html') {
   readData();
 }
